@@ -21,24 +21,55 @@
        http://www.springframework.org/schema/mvc
        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
     <!--配置spring包扫描-->
-    <context:component-scan base-package="com.demo"></context:component-scan>
+    <context:component-scan base-package="com.demo.controller"></context:component-scan>
     <mvc:resources mapping="/img/**" location="/img/"></mvc:resources>
     <mvc:resources mapping="/css/**" location="/css/"></mvc:resources>
     <mvc:resources mapping="/js/**" location="/js/"></mvc:resources>
     <mvc:resources mapping="/static/**" location="/static/"></mvc:resources>
+    <mvc:resources mapping="/upload/**" location="/upload/"></mvc:resources>
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-    <property name="prefix" value="/WEB-INF/view/"  ></property>
-        <property name="suffix" value=".jsp"  ></property>
+        <!--        <property name="prefix" value="/WEB-INF/view/"  ></property>-->
+        <!--        <property name="suffix" value=".jsp"  ></property>-->
     </bean>
-<!--    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">-->
-<!--        <property name="converters">-->
-<!--            <array>-->
-<!--                &lt;!&ndash;注入自定义转换器对象&ndash;&gt;-->
-<!--                <bean class="com.demo.util.StringToDateConverter"></bean>-->
-<!--            </array>-->
+    <!--文件上传解析组件
+    id必须为multipartResolver
+    springmvc默认使用该id找该组件
+    -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSizePerFile" value="10240000"></property>
+    </bean>
+
+<!--    <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">-->
+<!--        <property name="exceptionMappings">-->
+<!--            <props>-->
+<!--                <prop key="java.lang.ArithmeticException">redirect:/error_ari.jsp</prop>-->
+<!--                <prop key="java.lang.NullPointerException">redirect:/error_null.jsp</prop>-->
+<!--            </props>-->
 <!--        </property>-->
 <!--    </bean>-->
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/login.do"/>
+            <bean id="myInterceptor" class="com.demo.configuration.MyInterceptor"></bean>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/login.do"/>
+            <bean id="myInterceptor2" class="com.demo.configuration.MyInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!--    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">-->
+    <!--        <property name="converters">-->
+    <!--            <array>-->
+    <!--                &lt;!&ndash;注入自定义转换器对象&ndash;&gt;-->
+    <!--                <bean class="com.demo.util.StringToDateConverter"></bean>-->
+    <!--            </array>-->
+    <!--        </property>-->
+    <!--    </bean>-->
     <!--这里配置转换服务工厂-->
-<!--    <mvc:annotation-driven conversion-service="conversionService"/>-->
-    <mvc:annotation-driven />
+    <!--    <mvc:annotation-driven conversion-service="conversionService"/>-->
+    <mvc:annotation-driven/>
+    <context:component-scan base-package="com.demo.service,com.demo.exceptionhandler"/>
+
+
 </beans>
